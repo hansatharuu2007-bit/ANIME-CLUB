@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Anime World - Ultimate Anime Streaming & Discovery Platform. Explore top trending anime, watch trailers, manage your personal watchlist, and discover your next favorite series.">
+  <title>ANIME WORLD | Discover & Stream Anime</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛩️</text></svg>">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- =========================================================================
+       NAVIGATION BAR
+       ========================================================================= -->
+  <header class="navbar">
+    <div class="container navbar-container">
+      <!-- Logo -->
+      <div class="brand" id="brandLogo">
+        <div class="brand-icon">
+          <i class="fa-solid fa-fire-flame-curved"></i>
+        </div>
+        <div class="brand-title">
+          ANIME WORLD
+          <span class="brand-kanji">アニメ</span>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#" class="nav-link active" data-filter="all">Home</a></li>
+          <li><a href="#" class="nav-link" data-filter="airing">Top Airing</a></li>
+          <li><a href="#" class="nav-link" data-filter="bypopularity">Popular</a></li>
+          <li><a href="#" class="nav-link" data-filter="favorite">Most Favorited</a></li>
+          <li><a href="#" class="nav-link" id="navWatchlistBtn">My Watchlist</a></li>
+        </ul>
+      </nav>
+
+      <!-- Right Actions (Search, Gacha, Watchlist, Theme) -->
+      <div class="nav-actions">
+        <!-- Live Search -->
+        <div class="search-wrapper">
+          <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+          <input 
+            type="text" 
+            id="searchInput" 
+            class="search-input" 
+            placeholder="Search anime..." 
+            autocomplete="off"
+          >
+          <span class="search-shortcut">⌘K</span>
+          
+          <!-- Dropdown Results -->
+          <div class="search-dropdown" id="searchDropdown"></div>
+        </div>
+
+        <!-- Surprise Me / Gacha Button -->
+        <button class="btn-icon" id="gachaBtn" title="Surprise Me (Roll Anime 🎲)">
+          <i class="fa-solid fa-dice"></i>
+        </button>
+
+        <!-- Watchlist Drawer Button -->
+        <button class="btn-icon" id="watchlistToggleBtn" title="My Watchlist" style="position: relative;">
+          <i class="fa-solid fa-bookmark"></i>
+          <span class="badge-count" id="watchlistCount">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       MAIN CONTENT CONTAINER
+       ========================================================================= -->
+  <main class="container">
+
+    <!-- HERO SPOTLIGHT CAROUSEL -->
+    <section class="hero" id="heroSpotlight">
+      <img src="" alt="Hero Backdrop" class="hero-backdrop" id="heroBackdrop">
+      <div class="hero-overlay"></div>
+      
+      <div class="hero-content">
+        <div class="hero-tag">
+          <span class="badge badge-primary"><i class="fa-solid fa-bolt"></i> Spotlight #1</span>
+          <span class="badge badge-score" id="heroScore"><i class="fa-solid fa-star"></i> 8.65</span>
+          <span class="badge badge-tag" id="heroType">TV Series</span>
+        </div>
+
+        <h1 class="hero-title" id="heroTitle">Solo Leveling</h1>
+        <div class="hero-japanese-title" id="heroJapTitle">俺だけレベルアップな件</div>
+
+        <div class="hero-meta" id="heroMeta">
+          <span class="badge badge-tag" id="heroStudio">A-1 Pictures</span>
+          <span class="badge badge-tag" id="heroSeason">Winter 2024</span>
+          <span class="badge badge-cyan" id="heroEpisodes">12 Episodes</span>
+        </div>
+
+        <p class="hero-synopsis" id="heroSynopsis">
+          In a world where hunters must battle deadly monsters to protect the human race, a notoriously weak hunter finds himself in a struggle for survival...
+        </p>
+
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="heroPlayTrailerBtn">
+            <i class="fa-solid fa-play"></i> Watch Trailer
+          </button>
+          <button class="btn btn-secondary" id="heroWatchEpBtn">
+            <i class="fa-solid fa-circle-play"></i> Stream Ep 1
+          </button>
+          <button class="btn btn-secondary" id="heroBookmarkBtn">
+            <i class="fa-regular fa-bookmark"></i> Add to List
+          </button>
+        </div>
+      </div>
+
+      <!-- Carousel Indicators -->
+      <div class="hero-controls" id="heroIndicators"></div>
+    </section>
+
+    <!-- DISCOVERY & FILTER SECTION -->
+    <section class="controls-section">
+      <div class="controls-header">
+        <div>
+          <h2 class="section-title">
+            <i class="fa-solid fa-fire section-title-highlight"></i>
+            <span id="gridTitle">Popular Anime</span>
+          </h2>
+          <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 4px;" id="gridSubtitle">
+            Explore community favorites and top trending series
+          </p>
+        </div>
+
+        <!-- Sort Selector -->
+        <select class="sort-select" id="sortSelect">
+          <option value="popularity">Sort by: Most Popular</option>
+          <option value="score_desc">Sort by: Highest Score</option>
+          <option value="score_asc">Sort by: Lowest Score</option>
+          <option value="title_asc">Sort by: Title (A - Z)</option>
+        </select>
+      </div>
+
+      <!-- Genre / Filter Pills -->
+      <div class="filter-pills" id="genrePills">
+        <!-- Pills populated via JS -->
+      </div>
+    </section>
+
+    <!-- ANIME GRID -->
+    <section class="anime-grid" id="animeGrid">
+      <!-- Skeleton Cards while loading -->
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================================
+       ANIME DETAILS MODAL
+       ========================================================================= -->
+  <div class="modal-backdrop" id="animeModal">
+    <div class="modal-container">
+      <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close modal">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- Banner Header -->
+      <div class="modal-hero">
+        <img src="" alt="" class="modal-backdrop-img" id="modalBackdrop">
+        <div class="modal-hero-gradient"></div>
+      </div>
+
+      <!-- Body Content -->
+      <div class="modal-body">
+        <div class="modal-header-layout">
+          <img src="" alt="" class="modal-poster" id="modalPoster">
+          <div class="modal-details">
+            <h2 class="modal-title" id="modalTitle">Anime Title</h2>
+            <div class="modal-jap-title" id="modalJapTitle">Japanese Title</div>
+            
+            <div class="modal-badges" id="modalBadges"></div>
+
+            <div class="modal-actions">
+              <button class="btn btn-primary" id="modalPlayBtn">
+                <i class="fa-solid fa-play"></i> Watch Trailer
+              </button>
+              <button class="btn btn-secondary" id="modalStreamBtn">
+                <i class="fa-solid fa-tv"></i> Simulated Player
+              </button>
+              <button class="btn btn-secondary" id="modalBookmarkBtn">
+                <i class="fa-regular fa-bookmark"></i> Add to List
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Synopsis -->
+        <h3 class="modal-section-title"><i class="fa-solid fa-align-left" style="color: var(--primary);"></i> Synopsis</h3>
+        <p class="modal-synopsis" id="modalSynopsis"></p>
+
+        <!-- Episodes Selector -->
+        <h3 class="modal-section-title"><i class="fa-solid fa-list-ol" style="color: var(--cyan);"></i> Episodes</h3>
+        <div class="episodes-grid" id="modalEpisodesGrid"></div>
+
+        <!-- Characters & Cast -->
+        <h3 class="modal-section-title"><i class="fa-solid fa-users" style="color: var(--purple);"></i> Main Characters</h3>
+        <div class="characters-grid" id="modalCharactersGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       SIMULATED VIDEO PLAYER MODAL
+       ========================================================================= -->
+  <div class="player-modal" id="playerModal">
+    <!-- Player Top Header -->
+    <div class="player-header">
+      <div class="player-anime-info">
+        <button class="btn-icon" id="playerCloseBtn" title="Close Player">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <div>
+          <h3 class="player-title" id="playerTitle">Solo Leveling</h3>
+          <span class="player-episode-badge" id="playerEpBadge">Episode 1: I'm Used to It</span>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <span class="badge badge-tag"><i class="fa-solid fa-closed-captioning"></i> SUB / DUB</span>
+        <span class="badge badge-cyan"><i class="fa-solid fa-gauge-high"></i> 1080p HD</span>
+      </div>
+    </div>
+
+    <!-- Video + Sidebar -->
+    <div class="player-body">
+      <div class="player-screen-wrapper">
+        <div class="player-iframe-container" id="playerIframeContainer">
+          <!-- Trailer / Simulated Video iframe loaded via JS -->
+        </div>
+
+        <!-- Skip Intro Floating Button -->
+        <button class="skip-intro-btn" id="skipIntroBtn">
+          <i class="fa-solid fa-forward"></i> Skip Intro (85s)
+        </button>
+      </div>
+
+      <!-- Episode Switcher Sidebar -->
+      <div class="player-sidebar">
+        <div class="player-sidebar-header">
+          <span>Episodes</span>
+          <span style="font-size: 0.8rem; color: var(--text-subtle);" id="playerSidebarEpCount">12 Episodes</span>
+        </div>
+        <div class="player-sidebar-list" id="playerSidebarList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       WATCHLIST DRAWER MODAL
+       ========================================================================= -->
+  <div class="watchlist-modal" id="watchlistModal">
+    <div class="watchlist-drawer">
+      <div class="watchlist-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <i class="fa-solid fa-bookmark" style="color: var(--primary); font-size: 1.25rem;"></i>
+          <h2>My Watchlist</h2>
+        </div>
+        <button class="btn-icon" id="watchlistCloseBtn">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Status Filter Tabs -->
+      <div class="watchlist-tabs">
+        <button class="watchlist-tab-btn active" data-tab="all">All</button>
+        <button class="watchlist-tab-btn" data-tab="watching">Watching</button>
+        <button class="watchlist-tab-btn" data-tab="plan">Plan to Watch</button>
+        <button class="watchlist-tab-btn" data-tab="completed">Completed</button>
+      </div>
+
+      <!-- List Items Container -->
+      <div class="watchlist-list" id="watchlistItemsList">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       RANDOM GACHA MODAL
+       ========================================================================= -->
+  <div class="modal-backdrop" id="gachaModal">
+    <div class="modal-container gacha-modal-card">
+      <div class="gacha-dice-icon">🎲</div>
+      <h2 style="font-size: 1.8rem; margin: 12px 0 6px;">Anime Oracle</h2>
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 24px;">
+        Can't decide what to binge? The stars have aligned for you!
+      </p>
+
+      <div id="gachaResultContainer" style="margin-bottom: 24px;"></div>
+
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <button class="btn btn-primary" id="gachaRollAgainBtn">
+          <i class="fa-solid fa-rotate-right"></i> Roll Another
+        </button>
+        <button class="btn btn-secondary" id="gachaCloseBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       TOAST NOTIFICATION CONTAINER
+       ========================================================================= -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- =========================================================================
+       FOOTER
+       ========================================================================= -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div>
+          <div class="brand" style="margin-bottom: 8px;">
+            <div class="brand-icon" style="width: 32px; height: 32px; font-size: 1rem;">
+              <i class="fa-solid fa-fire-flame-curved"></i>
+            </div>
+            <div class="brand-title" style="font-size: 1.25rem;">ANIME WORLD</div>
+          </div>
+          <p class="footer-quote">
+            "Fear is not evil. It tells you what your weakness is. And once you know your weakness, you can become stronger as well as kinder."
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 16px;">
+          <a href="#" class="btn-icon" title="GitHub"><i class="fa-brands fa-github"></i></a>
+          <a href="#" class="btn-icon" title="Discord"><i class="fa-brands fa-discord"></i></a>
+          <a href="#" class="btn-icon" title="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 ANIME WORLD. Made with pure HTML, CSS, and JavaScript. Powered by Jikan API.</div>
+        <div>All anime media and trademarks are property of their respective creators and studios.</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="api.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
